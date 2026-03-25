@@ -2,7 +2,9 @@ import pool from '../../config/db.js';
 
 class ResumeModel {
   async getActiveResume() {
-    const [rows] = await pool.execute('SELECT id, file_name, file_path, version, download_count, created_at FROM resumes WHERE is_active=1 AND status="active" LIMIT 1');
+    const [rows] = await pool.execute(
+      'SELECT id, file_name, file_path, version, download_count, created_at FROM resumes WHERE is_active=1 LIMIT 1'
+    );
     return rows[0] || null;
   }
 
