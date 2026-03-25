@@ -28,7 +28,7 @@ router.use('/contact', contactRoutes);
 router.use('/visitors', visitorsRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/resume', resumeRoutes);
-router.use('/blog', blogsRoutes);      // Matching old /api/blog
+router.use('/blogs', blogsRoutes);     // Frontend calls /api/blogs
 router.use('/settings', settingsRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/upload', uploadsRoutes);  // Matching old /api/upload

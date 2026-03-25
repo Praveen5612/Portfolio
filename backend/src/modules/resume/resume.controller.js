@@ -4,8 +4,10 @@ import resumeService from './resume.service.js';
 
 export const getActiveResume = asyncHandler(async (req, res) => {
   const data = await resumeService.getActiveResume();
-  return successResponse(res, 200, 'Active resume retrieved', data);
+  // Return null gracefully — frontend shows "Resume will be available soon"
+  return successResponse(res, 200, 'Active resume retrieved', data ?? null);
 });
+
 
 export const downloadResume = asyncHandler(async (req, res) => {
   const { visitor_id, session_id } = req.query;
