@@ -13,3 +13,9 @@ backend/uploads/blogs/*
 !backend/uploads/resumes/.gitkeep
 !backend/uploads/profile/.gitkeep
 !backend/uploads/blogs/.gitkeep
+
+.env
+.env.*
+node_modules
+dist
+build
