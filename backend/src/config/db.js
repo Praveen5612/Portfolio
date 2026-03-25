@@ -18,7 +18,14 @@ if (env.db.ssl) {
   poolConfig.ssl = { rejectUnauthorized: false };
 }
 
-const pool = mysql.createPool(poolConfig);
+let pool;
+
+if (!global.pool) {
+  pool = mysql.createPool(poolConfig);
+  global.pool = pool;
+} else {
+  pool = global.pool;
+}
 
 export const testConnection = async () => {
   try {
@@ -27,7 +34,8 @@ export const testConnection = async () => {
     conn.release();
   } catch (err) {
     console.error('❌ Database connection failed:', err.message);
-    process.exit(1);
+    // Don't exit in serverless, just throw
+    throw err;
   }
 };
 

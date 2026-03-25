@@ -1,8 +1,9 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-// Dynamic API URL resolution
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// In production (Vercel), frontend and backend share the same domain.
+// Use relative /api path so no CORS issues or hardcoded URLs are needed.
+const baseURL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL,

@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import resumeController from './resume.controller.js';
+import {
+  getActiveResume,
+  downloadResume,
+  getAllResumes,
+  uploadResume,
+  deleteResume
+} from './resume.controller.js';
 import { authenticate } from '../../middleware/auth.middleware.js';
 import { validateRequest } from '../../middleware/validate.middleware.js';
 import { resumeUploadSchema, resumeDownloadSchema } from './resume.validate.js';
@@ -14,14 +20,14 @@ const setUploadFolder = (req, res, next) => {
 };
 
 // Public endpoints
-router.get('/active', resumeController.getActiveResume);
-router.get('/download/:id', validateRequest(resumeDownloadSchema, 'query'), resumeController.downloadResume);
+router.get('/active', getActiveResume);
+router.get('/download/:id', validateRequest(resumeDownloadSchema, 'query'), downloadResume);
 
 // Admin endpoints
 router.use(authenticate);
-router.get('/admin/all', resumeController.getAllResumes);
+router.get('/admin/all', getAllResumes);
 
-router.post('/upload', setUploadFolder, upload.single('resume'), validateRequest(resumeUploadSchema), resumeController.uploadResume);
-router.delete('/:id', resumeController.deleteResume);
+router.post('/upload', setUploadFolder, upload.single('resume'), validateRequest(resumeUploadSchema), uploadResume);
+router.delete('/:id', deleteResume);
 
 export default router;

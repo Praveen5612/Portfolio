@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import blogsController from './blogs.controller.js';
+import {
+  getPublicBlogs,
+  getBlogDetails,
+  getAdminBlogs,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+  toggleBlogStatus
+} from './blogs.controller.js';
 import { authenticate } from '../../middleware/auth.middleware.js';
 import { validateRequest } from '../../middleware/validate.middleware.js';
 import { blogSchema } from './blogs.validate.js';
@@ -13,15 +21,17 @@ const setUploadFolder = (req, res, next) => {
 };
 
 // Public endpoints
-router.get('/', blogsController.getPublicBlogs);
-router.get('/:slug', blogsController.getBlogDetails);
+router.get('/', getPublicBlogs);
+router.get('/:slug', getBlogDetails);
 
 // Admin endpoints
 router.use('/admin', authenticate);
-router.get('/admin/all', blogsController.getAdminBlogs);
+router.get('/admin/all', getAdminBlogs);
 
-router.post('/', authenticate, setUploadFolder, upload.single('thumbnail'), validateRequest(blogSchema), blogsController.createBlog);
-router.put('/:id', authenticate, setUploadFolder, upload.single('thumbnail'), validateRequest(blogSchema), blogsController.updateBlog);
-router.delete('/:id', authenticate, blogsController.deleteBlog);
+router.post('/', authenticate, setUploadFolder, upload.single('thumbnail'), validateRequest(blogSchema), createBlog);
+router.put('/:id', authenticate, setUploadFolder, upload.single('thumbnail'), validateRequest(blogSchema), updateBlog);
+router.patch('/:id/status', authenticate, toggleBlogStatus); // frontend uses this
+router.delete('/:id', authenticate, deleteBlog);
 
 export default router;
+

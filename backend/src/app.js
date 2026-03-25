@@ -11,6 +11,7 @@ import routes from './routes/index.js';
 import { globalErrorHandler, notFoundHandler } from './global/errorHandler.js';
 import logger from './global/logger.js';
 import { globalLimiter } from './middleware/rateLimit.middleware.js';
+import pool from './config/db.js';
 
 // Setup __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -47,7 +48,22 @@ if (!fs.existsSync(uploadDir)) {
 }
 app.use('/uploads', express.static(uploadDir));
 
-// Log routes for debugging
+// Health Check
+app.get('/api', (req, res) => {
+  res.status(200).json({ success: true, message: 'API Running' });
+});
+
+// DB Connection Test
+app.get('/api/test-db', async (req, res) => {
+  try {
+    const [rows] = await pool.execute('SELECT 1 AS ok, NOW() AS ts');
+    res.status(200).json({ success: true, message: 'Database connected', data: rows[0] });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Database connection failed', error: err.message });
+  }
+});
+
+
 // API Routes Entry
 app.use('/api', routes);
 

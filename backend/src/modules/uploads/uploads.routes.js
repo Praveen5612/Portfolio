@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import uploadsController from './uploads.controller.js';
+import { uploadProfileAvatar, uploadGenericFile } from './uploads.controller.js';
 import { authenticate } from '../../middleware/auth.middleware.js';
 import { upload } from '../../config/multer.js';
 
@@ -13,7 +13,7 @@ const setFolder = (folder) => (req, res, next) => {
   next();
 };
 
-router.post('/profile', setFolder('profile'), upload.single('avatar'), uploadsController.uploadProfileAvatar);
-router.post('/misc', setFolder('misc'), upload.single('file'), uploadsController.uploadGenericFile);
+router.post('/profile', setFolder('profile'), upload.single('avatar'), uploadProfileAvatar);
+router.post('/misc', setFolder('misc'), upload.single('file'), uploadGenericFile);
 
 export default router;

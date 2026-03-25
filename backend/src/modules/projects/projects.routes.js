@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import projectsController from './projects.controller.js';
+import {
+  getPublicProjects,
+  getProject,
+  getAdminProjects,
+  createProject,
+  updateProject,
+  publishProject,
+  deleteProject
+} from './projects.controller.js';
 import { authenticate } from '../../middleware/auth.middleware.js';
 import { validateRequest } from '../../middleware/validate.middleware.js';
 import { projectSchema, publishSchema } from './projects.validate.js';
@@ -14,16 +22,18 @@ const setUploadFolder = (req, res, next) => {
 };
 
 // Public routes
-router.get('/', projectsController.getPublicProjects);
-router.get('/:id', projectsController.getProject);
+router.get('/', getPublicProjects);
+router.get('/:id', getProject);
 
 // Admin routes
 router.use('/admin', authenticate);
-router.get('/admin/all', projectsController.getAdminProjects);
+router.get('/admin/all', getAdminProjects);
 
-router.post('/', authenticate, setUploadFolder, upload.array('images', 10), validateRequest(projectSchema), projectsController.createProject);
-router.put('/:id', authenticate, setUploadFolder, upload.array('images', 10), validateRequest(projectSchema), projectsController.updateProject);
-router.put('/:id/publish', authenticate, validateRequest(publishSchema), projectsController.publishProject);
-router.delete('/:id', authenticate, projectsController.deleteProject);
+router.post('/', authenticate, setUploadFolder, upload.array('images', 10), validateRequest(projectSchema), createProject);
+router.put('/:id', authenticate, setUploadFolder, upload.array('images', 10), validateRequest(projectSchema), updateProject);
+router.put('/:id/publish', authenticate, validateRequest(publishSchema), publishProject);
+router.patch('/:id/status', authenticate, validateRequest(publishSchema), publishProject); // alias for frontend
+router.delete('/:id', authenticate, deleteProject);
+
 
 export default router;

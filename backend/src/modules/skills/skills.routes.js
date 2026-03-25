@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import skillsController from './skills.controller.js';
+import {
+  getPublicSkills,
+  getAdminSkills,
+  createSkill,
+  updateSkill,
+  deleteSkill
+} from './skills.controller.js';
 import { authenticate } from '../../middleware/auth.middleware.js';
 import { validateRequest } from '../../middleware/validate.middleware.js';
 import { skillSchema } from './skills.validate.js';
@@ -7,14 +13,14 @@ import { skillSchema } from './skills.validate.js';
 const router = Router();
 
 // Public routes
-router.get('/', skillsController.getPublicSkills);
+router.get('/', getPublicSkills);
 
 // Admin routes
 router.use('/admin', authenticate);
-router.get('/admin/all', skillsController.getAdminSkills);
+router.get('/admin/all', getAdminSkills);
 
-router.post('/', authenticate, validateRequest(skillSchema), skillsController.createSkill);
-router.put('/:id', authenticate, validateRequest(skillSchema), skillsController.updateSkill);
-router.delete('/:id', authenticate, skillsController.deleteSkill);
+router.post('/', authenticate, validateRequest(skillSchema), createSkill);
+router.put('/:id', authenticate, validateRequest(skillSchema), updateSkill);
+router.delete('/:id', authenticate, deleteSkill);
 
 export default router;

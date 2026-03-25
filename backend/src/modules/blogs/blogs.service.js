@@ -56,6 +56,12 @@ class BlogsService {
     await blogsModel.deleteBlog(id);
     return true;
   }
+
+  async toggleStatus(id, isPublished) {
+    const published = isPublished === true || isPublished === 1 || isPublished === 'true' || isPublished === '1';
+    await blogsModel.updatePublishStatus(id, published ? 1 : 0);
+    return true;
+  }
 }
 
 export default new BlogsService();
