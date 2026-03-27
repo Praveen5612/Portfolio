@@ -9,7 +9,9 @@ class LeadsModel {
       params.push(status);
     }
 
-    const [rows] = await pool.execute(`SELECT * FROM leads ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`, [...params, Number(limit), Number(offset)]);
+    const l = String(Number(limit) || 10);
+    const o = String(Number(offset) || 0);
+    const [rows] = await pool.execute(`SELECT * FROM leads ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`, [...params, l, o]);
     const [count] = await pool.execute(`SELECT COUNT(*) as total FROM leads ${where}`, params);
     
     return { leads: rows, total: count[0].total };

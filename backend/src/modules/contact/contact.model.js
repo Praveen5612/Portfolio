@@ -17,7 +17,9 @@ class ContactModel {
       params.push(status);
     }
 
-    const [rows] = await pool.execute(`SELECT * FROM contact_messages ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`, [...params, Number(limit), Number(offset)]);
+    const l = String(Number(limit) || 10);
+    const o = String(Number(offset) || 0);
+    const [rows] = await pool.execute(`SELECT * FROM contact_messages ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`, [...params, l, o]);
     const [count] = await pool.execute(`SELECT COUNT(*) as total FROM contact_messages ${where}`, params);
     
     return { messages: rows, total: count[0].total };

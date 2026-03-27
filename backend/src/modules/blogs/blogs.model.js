@@ -2,16 +2,20 @@ import pool from '../../config/db.js';
 
 class BlogsModel {
   async getPublicBlogs(limit, offset) {
+    const l = String(Number(limit) || 10);
+    const o = String(Number(offset) || 0);
     const [rows] = await pool.execute(
       'SELECT id, title, slug, excerpt, thumbnail, tags, views, created_at FROM blogs WHERE is_published=1 ORDER BY created_at DESC LIMIT ? OFFSET ?',
-      [Number(limit), Number(offset)]
+      [l, o]
     );
     const [count] = await pool.execute('SELECT COUNT(*) as total FROM blogs WHERE is_published=1');
     return { blogs: rows, total: count[0].total };
   }
 
   async getAllAdminBlogs(limit, offset) {
-    const [rows] = await pool.execute('SELECT * FROM blogs ORDER BY created_at DESC LIMIT ? OFFSET ?', [Number(limit), Number(offset)]);
+    const l = String(Number(limit) || 10);
+    const o = String(Number(offset) || 0);
+    const [rows] = await pool.execute('SELECT * FROM blogs ORDER BY created_at DESC LIMIT ? OFFSET ?', [l, o]);
     const [count] = await pool.execute('SELECT COUNT(*) as total FROM blogs');
     return { blogs: rows, total: count[0].total };
   }
