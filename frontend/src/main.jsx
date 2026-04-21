@@ -7,20 +7,18 @@ import App from './App.jsx'
 import './styles/index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <App />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' },
-            success: { iconTheme: { primary: '#10b981', secondary: '#fff' } },
-            error: { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
-          }}
-        />
-      </BrowserRouter>
-    </HelmetProvider>
-  </React.StrictMode>,
+  <HelmetProvider>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <App />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' },
+          success: { iconTheme: { primary: '#10b981', secondary: '#fff' } },
+          error: { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
+        }}
+      />
+    </BrowserRouter>
+  </HelmetProvider>
 )

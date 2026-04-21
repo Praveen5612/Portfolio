@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import { skillsApi } from '../../services/skills.api.js'
 
-const EMPTY = { name: '', category: '', proficiency: 80, icon: '', sort_order: 0, is_published: true, status: 'active' }
+const EMPTY = { name: '', category: '', proficiency: 80, icon: '', sort_order: 0, is_active: true }
 
 export default function AdminSkills() {
   const [skills, setSkills] = useState([])
@@ -19,7 +19,7 @@ export default function AdminSkills() {
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'number' ? Number(e.target.value) : e.target.value }))
 
   const openAdd = () => { setEditing(null); setForm(EMPTY); setShowModal(true) }
-  const openEdit = (s) => { setEditing(s); setForm({ ...s, is_published: !!s.is_published }); setShowModal(true) }
+  const openEdit = (s) => { setEditing(s); setForm({ ...s, is_active: !!s.is_active }); setShowModal(true) }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -131,14 +131,14 @@ export default function AdminSkills() {
                 </div>
                 <div>
                   <label className="label">Status</label>
-                  <select className="input" value={form.status} onChange={set('status')}>
+                  <select className="input" value={form.is_active ? 'active' : 'inactive'} onChange={(e) => setForm(f => ({ ...f, is_active: e.target.value === 'active' }))}>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                   </select>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <input type="checkbox" id="spub" checked={form.is_published} onChange={set('is_published')} className="w-4 h-4 accent-blue-500" />
+                <input type="checkbox" id="spub" checked={!!form.is_active} onChange={set('is_active')} className="w-4 h-4 accent-blue-500" />
                 <label htmlFor="spub" className="text-slate-300 text-sm">Published</label>
               </div>
               <div className="flex gap-3 pt-2">

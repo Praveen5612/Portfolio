@@ -3,6 +3,8 @@ import { useEffect } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
 import { SettingsProvider } from './context/SettingsContext.jsx'
 import { initTracker, endSession } from './utils/analytics.js'
+import LocomotiveScroll from 'locomotive-scroll'
+
 
 // Public Layout & Pages
 import PublicLayout from './components/public/PublicLayout.jsx'
@@ -44,7 +46,14 @@ function AppContent() {
   useEffect(() => {
     initTracker()
     window.addEventListener('beforeunload', endSession)
-    return () => window.removeEventListener('beforeunload', endSession)
+    
+    // Initialize Locomotive Scroll for smooth scrolling
+    const locomotiveScroll = new LocomotiveScroll();
+    
+    return () => {
+      window.removeEventListener('beforeunload', endSession)
+      if (locomotiveScroll) locomotiveScroll.destroy();
+    }
   }, [])
 
   return (

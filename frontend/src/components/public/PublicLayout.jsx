@@ -35,8 +35,9 @@ export default function PublicLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-slate-950/90 backdrop-blur-lg border-b border-slate-800/80 shadow-xl shadow-black/20' : 'bg-transparent'
+      {/* Navbar - Floating Glassmorphism */}
+      <header className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50 transition-all duration-500 rounded-3xl ${
+        scrolled ? 'bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] py-2' : 'bg-transparent py-4'
       }`}>
         <div className="container-custom">
           <div className="flex items-center justify-between h-16">
@@ -107,7 +108,7 @@ export default function PublicLayout() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-32">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -122,25 +123,37 @@ export default function PublicLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-8 mt-16">
-        <div className="container-custom">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-slate-500 text-sm">
-              © {new Date().getFullYear()} {settings.site_name || 'Portfolio'}. All rights reserved.
-            </p>
-            <div className="flex items-center gap-4">
+      <footer className="relative mt-16 py-12 border-t border-slate-800/50 bg-slate-900/20 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_bottom,rgba(59,130,246,0.05)_0,transparent_60%)]" />
+        <div className="container-custom relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
+              <Link to="/" className="text-2xl font-bold gradient-text font-display mb-2">
+                {settings.site_name || 'Portfolio'}
+              </Link>
+              <p className="text-slate-500 text-sm max-w-sm">
+                Crafting exceptional digital experiences with modern web technologies.
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-6">
               {socialLinks.map(link => (
-                <a
+                <motion.a
+                  whileHover={{ y: -3, scale: 1.1, color: '#60a5fa' }}
                   key={link.id}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-500 hover:text-white transition-colors text-sm"
+                  className="text-slate-400 hover:text-white transition-all text-sm font-medium tracking-wide"
                 >
                   {link.platform}
-                </a>
+                </motion.a>
               ))}
             </div>
+            
+            <p className="text-slate-600 text-xs">
+              © {new Date().getFullYear()} {settings.site_name || 'Portfolio'}. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
