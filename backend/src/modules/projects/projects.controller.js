@@ -31,9 +31,11 @@ export const updateProject = asyncHandler(async (req, res) => {
 });
 
 export const publishProject = asyncHandler(async (req, res) => {
-  const { is_published } = req.body;
-  await projectsService.togglePublish(req.params.id, is_published);
-  return successResponse(res, 200, `Project ${is_published ? 'published' : 'unpublished'}`);
+  const statusOrPublished = req.body.status !== undefined ? req.body.status : req.body.is_published;
+  await projectsService.togglePublish(req.params.id, statusOrPublished);
+  
+  const isPublished = typeof statusOrPublished === 'string' ? statusOrPublished === 'published' : statusOrPublished;
+  return successResponse(res, 200, `Project ${isPublished ? 'published' : 'unpublished'}`);
 });
 
 export const deleteProject = asyncHandler(async (req, res) => {

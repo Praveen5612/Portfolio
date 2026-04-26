@@ -13,8 +13,19 @@ export default function AdminSkills() {
   const [form, setForm] = useState(EMPTY)
   const [loading, setLoading] = useState(false)
 
-  const load = () => skillsApi.getAll({ admin: true }).then(r => setSkills(r.data || [])).catch(() => {})
+  const load = () => skillsApi.getAll({ admin: true }).then(r => setSkills(r.data || [])).catch(() => { })
   useEffect(() => { load() }, [])
+  useEffect(() => {
+    if (!showModal) return
+    const prevBody = document.body.style.overflow
+    const prevHtml = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prevBody
+      document.documentElement.style.overflow = prevHtml
+    }
+  }, [showModal])
 
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'number' ? Number(e.target.value) : e.target.value }))
 
@@ -25,11 +36,12 @@ export default function AdminSkills() {
     e.preventDefault()
     setLoading(true)
     try {
+      const payload = { ...form, is_active: form.is_active ? 1 : 0 }
       if (editing) {
-        await skillsApi.update(editing.id, form)
+        await skillsApi.update(editing.id, payload)
         toast.success('Skill updated')
       } else {
-        await skillsApi.create(form)
+        await skillsApi.create(payload)
         toast.success('Skill added')
       }
       setShowModal(false); load()
@@ -104,13 +116,13 @@ export default function AdminSkills() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] flex flex-col my-auto">
             <div className="p-5 border-b border-slate-700 flex items-center justify-between">
               <h3 className="text-white font-semibold">{editing ? 'Edit Skill' : 'Add Skill'}</h3>
               <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white text-2xl">×</button>
             </div>
-            <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            <form onSubmit={handleSubmit} className="p-5 overflow-y-auto flex-1 min-h-0 space-y-4 overscroll-contain">
               <div>
                 <label className="label">Skill Name *</label>
                 <input className="input" value={form.name} onChange={set('name')} required />
@@ -137,10 +149,7 @@ export default function AdminSkills() {
                   </select>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <input type="checkbox" id="spub" checked={!!form.is_active} onChange={set('is_active')} className="w-4 h-4 accent-blue-500" />
-                <label htmlFor="spub" className="text-slate-300 text-sm">Published</label>
-              </div>
+
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="btn-secondary flex-1 justify-center">Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary flex-1 justify-center">{loading ? 'Saving...' : 'Save Skill'}</button>

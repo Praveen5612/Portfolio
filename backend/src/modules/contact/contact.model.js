@@ -32,7 +32,7 @@ class ContactModel {
   }
 
   async markAsRead(id) {
-    await pool.execute('UPDATE contact_messages SET is_read=1, status=IF(status="new","read",status) WHERE id=?', [id]);
+    await pool.execute("UPDATE contact_messages SET is_read=1, status=IF(status='new','read',status) WHERE id=?", [id]);
   }
 
   async getReplies(messageId) {
@@ -42,7 +42,7 @@ class ContactModel {
 
   async createReply(messageId, adminId, replyText) {
     await pool.execute('INSERT INTO message_replies (message_id, admin_id, reply_text) VALUES (?,?,?)', [messageId, adminId, replyText]);
-    await pool.execute('UPDATE contact_messages SET status="replied", updated_at=NOW() WHERE id=?', [messageId]);
+    await pool.execute("UPDATE contact_messages SET status='replied', updated_at=NOW() WHERE id=?", [messageId]);
   }
 
   async updateStatus(id, status) {

@@ -2,6 +2,7 @@ import experienceModel from './experience.model.js';
 
 class ExperienceService {
   _parseJsonField(str) {
+    if (Array.isArray(str)) return str;
     try { return str ? JSON.parse(str) : []; } catch { return []; }
   }
 

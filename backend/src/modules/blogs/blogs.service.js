@@ -3,6 +3,7 @@ import { buildPaginationMeta } from '../../utils/pagination.js';
 
 class BlogsService {
   _parseTags(tagsStr) {
+    if (Array.isArray(tagsStr)) return tagsStr;
     try { return tagsStr ? JSON.parse(tagsStr) : []; } catch { return []; }
   }
 

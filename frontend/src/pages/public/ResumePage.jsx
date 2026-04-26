@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
-import { ArrowDownTrayIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+import { ArrowDownTrayIcon, DocumentTextIcon, EyeIcon } from '@heroicons/react/24/outline'
 import { resumeApi } from '../../services/resume.api.js'
 import { experienceApi } from '../../services/experience.api.js'
 import { skillsApi } from '../../services/skills.api.js'
@@ -51,10 +51,22 @@ export default function ResumePage() {
               <p className="text-slate-400">My professional experience and skills</p>
             </div>
             {resume && (
-              <button onClick={handleDownload} className="btn-primary">
-                <ArrowDownTrayIcon className="w-5 h-5" />
-                Download PDF
-              </button>
+              <div className="flex gap-3">
+                <a 
+                  href={`${import.meta.env.VITE_API_URL}${resume.file_path}`} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="btn-secondary"
+                  onClick={() => trackEvent('resume_view', { resume_id: resume.id })}
+                >
+                  <EyeIcon className="w-5 h-5" />
+                  View PDF
+                </a>
+                <button onClick={handleDownload} className="btn-primary">
+                  <ArrowDownTrayIcon className="w-5 h-5" />
+                  Download PDF
+                </button>
+              </div>
             )}
           </motion.div>
 

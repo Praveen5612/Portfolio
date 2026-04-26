@@ -32,8 +32,8 @@ export default function HomePage() {
   const [skills, setSkills] = useState([])
 
   useEffect(() => {
-    projectsApi.getAll({ limit: 3 }).then(r => setProjects(r.data || [])).catch(() => {})
-    skillsApi.getAll().then(r => setSkills(r.data || [])).catch(() => {})
+    projectsApi.getAll({ limit: 3 }).then(r => setProjects(r.data || [])).catch(() => { })
+    skillsApi.getAll().then(r => setSkills(r.data || [])).catch(() => { })
   }, [])
 
   const grouped = skills.reduce((acc, s) => {
@@ -51,7 +51,7 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="min-h-screen flex items-center relative overflow-hidden bg-slate-950">
-        
+
         {/* 3D and Particle Backgrounds injected into Hero */}
         <Hero3D />
         <AnimatedBackground />
@@ -130,10 +130,10 @@ export default function HomePage() {
             })}
           </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            transition={{ delay: 1.5, duration: 1 }} 
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
             className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce"
           >
             <ArrowDownIcon className="w-6 h-6 text-slate-500" />
@@ -145,9 +145,9 @@ export default function HomePage() {
       <section className="py-10 bg-slate-950 border-b border-slate-900 overflow-hidden shadow-[inset_0_0_100px_rgba(0,0,0,0.5)] relative z-20">
         <Marquee gradient={true} gradientColor="#0f172a" gradientWidth={150} speed={40} className="w-full">
           {["REACT", "NODE.JS", "TAILWIND", "THREE.JS", "GSAP", "FRAMER MOTION", "TYPESCRIPT", "MONGODB", "POSTGRESQL", "AWS", "DOCKER", "NEXT.JS"].map((tech, i) => (
-             <div key={i} className="mx-8 md:mx-16 text-3xl font-extrabold text-slate-800/80 font-display tracking-widest hover:text-slate-600 transition-colors cursor-default">
-               {tech}
-             </div>
+            <div key={i} className="mx-8 md:mx-16 text-3xl font-extrabold text-slate-800/80 font-display tracking-widest hover:text-slate-600 transition-colors cursor-default">
+              {tech}
+            </div>
           ))}
         </Marquee>
       </section>
@@ -160,8 +160,8 @@ export default function HomePage() {
               {JSON.parse(settings.stats).map((stat, i) => (
                 <ScrollReveal key={stat.label} delay={i * 0.1}>
                   <div className="text-center group overflow-hidden">
-                    <motion.div 
-                      whileHover={{ scale: 1.1, color: '#60a5fa' }} 
+                    <motion.div
+                      whileHover={{ scale: 1.1, color: '#60a5fa' }}
                       transition={{ type: "spring", stiffness: 300 }}
                       className="text-4xl font-bold text-white mb-2 font-display tracking-tight flex items-center justify-center gap-1"
                     >
@@ -182,7 +182,7 @@ export default function HomePage() {
         <section className="py-32 bg-slate-950 relative overflow-hidden">
           {/* subtle abstract background */}
           <div className="absolute top-1/2 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-slate-900/10 to-transparent pointer-events-none" />
-          
+
           <div className="container-custom relative z-10">
             <ScrollReveal>
               <div className="mb-16">
@@ -237,43 +237,43 @@ export default function HomePage() {
                     <Link to="/projects">
                       <TiltCard onClick={() => trackProjectClick(project.id, 'view')}>
                         <div className="card h-full border-slate-800/80 bg-slate-900/80 hover:bg-slate-800/90 overflow-hidden shadow-2xl group flex flex-col backdrop-blur-md cursor-pointer transition-all">
-                        {project.thumbnail && (
-                          <div className="w-full relative h-[220px] overflow-hidden bg-slate-800">
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent z-10" />
-                            <motion.img
-                              whileHover={{ scale: 1.1 }}
-                              transition={{ duration: 0.6 }}
-                              src={`${import.meta.env.VITE_API_URL}${project.thumbnail}`}
-                              alt={project.title}
-                              className="w-full h-full object-cover relative z-0"
-                            />
-                            <div className="absolute bottom-4 left-4 z-20 flex gap-2">
-                              {project.live_url && (
-                                <a href={project.live_url} target="_blank" rel="noopener noreferrer"
-                                  onClick={(e) => { e.stopPropagation(); trackProjectClick(project.id, 'live') }}
-                                  className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-500 transition-colors shadow-lg">
-                                  <FiExternalLink className="w-4 h-4" />
-                                </a>
-                              )}
-                              {project.github_url && (
-                                <a href={project.github_url} target="_blank" rel="noopener noreferrer"
-                                  onClick={(e) => { e.stopPropagation(); trackProjectClick(project.id, 'github') }}
-                                  className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-slate-700 transition-colors border border-slate-600 shadow-lg">
-                                  <FiGithub className="w-4 h-4" />
-                                </a>
-                              )}
+                          {project.thumbnail && (
+                            <div className="w-full relative h-[220px] overflow-hidden bg-slate-800">
+                              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent z-10" />
+                              <motion.img
+                                whileHover={{ scale: 1.1 }}
+                                transition={{ duration: 0.6 }}
+                                src={`${import.meta.env.VITE_API_URL}${project.thumbnail}`}
+                                alt={project.title}
+                                className="w-full h-full object-cover relative z-0"
+                              />
+                              <div className="absolute bottom-4 left-4 z-20 flex gap-2">
+                                {project.url && (
+                                  <a href={project.url} target="_blank" rel="noopener noreferrer"
+                                    onClick={(e) => { e.stopPropagation(); trackProjectClick(project.id, 'live') }}
+                                    className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-500 transition-colors shadow-lg">
+                                    <FiExternalLink className="w-4 h-4" />
+                                  </a>
+                                )}
+                                {project.github_url && (
+                                  <a href={project.github_url} target="_blank" rel="noopener noreferrer"
+                                    onClick={(e) => { e.stopPropagation(); trackProjectClick(project.id, 'github') }}
+                                    className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-white hover:bg-slate-700 transition-colors border border-slate-600 shadow-lg">
+                                    <FiGithub className="w-4 h-4" />
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                          <div className="p-6 flex-1 flex flex-col">
+                            <h3 className="text-white font-bold text-xl mb-3 tracking-tight group-hover:text-blue-400 transition-colors">{project.title}</h3>
+                            <p className="text-slate-400 text-sm mb-6 line-clamp-3 leading-relaxed flex-1">{project.description}</p>
+                            <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-800">
+                              {(project.tech_stack || []).slice(0, 4).map(t => (
+                                <span key={t} className="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-semibold">{t}</span>
+                              ))}
                             </div>
                           </div>
-                        )}
-                        <div className="p-6 flex-1 flex flex-col">
-                          <h3 className="text-white font-bold text-xl mb-3 tracking-tight group-hover:text-blue-400 transition-colors">{project.title}</h3>
-                          <p className="text-slate-400 text-sm mb-6 line-clamp-3 leading-relaxed flex-1">{project.description}</p>
-                          <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-800">
-                            {(project.tech_stack || []).slice(0, 4).map(t => (
-                              <span key={t} className="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-semibold">{t}</span>
-                            ))}
-                          </div>
-                        </div>
                         </div>
                       </TiltCard>
                     </Link>
@@ -338,10 +338,10 @@ export default function HomePage() {
             <div className="max-w-3xl mx-auto backdrop-blur-md bg-slate-950/40 p-12 rounded-3xl border border-white/5 shadow-2xl">
               <h2 className="text-5xl font-extrabold text-white mb-6 font-display">Let's build something amazing</h2>
               <p className="text-slate-400 mb-10 text-xl font-light leading-relaxed">Whether you have a specific project in mind, or just want to chat about possibilities, I'm here to help.</p>
-              
+
               <Link to="/contact">
-                <motion.button 
-                  whileHover={{ scale: 1.05, boxShadow: "0 10px 30px -10px rgba(59, 130, 246, 0.7)" }} 
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 30px -10px rgba(59, 130, 246, 0.7)" }}
                   whileTap={{ scale: 0.95 }}
                   className="btn-primary text-lg px-10 py-5 rounded-full shadow-lg shadow-blue-500/20"
                 >

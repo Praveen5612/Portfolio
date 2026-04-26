@@ -14,15 +14,30 @@ export default function AdminBlog() {
   const [thumbnail, setThumbnail] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const load = () => blogsApi.getAll({ admin: true }).then(r => setPosts(r.data || [])).catch(() => {})
+  const load = () => blogsApi.getAll({ admin: true }).then(r => setPosts(r.data || [])).catch(() => { })
   useEffect(() => { load() }, [])
+  useEffect(() => {
+    if (!showModal) return
+    const prevBody = document.body.style.overflow
+    const prevHtml = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prevBody
+      document.documentElement.style.overflow = prevHtml
+    }
+  }, [showModal])
 
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
 
   const openAdd = () => { setEditing(null); setForm(EMPTY); setThumbnail(null); setShowModal(true) }
   const openEdit = (p) => {
     setEditing(p)
-    setForm({ ...p, tags: Array.isArray(p.tags) ? p.tags.join(', ') : '', is_published: !!p.is_published })
+    setForm({ 
+      ...p, 
+      tags: Array.isArray(p.tags) ? p.tags.join(', ') : (typeof p.tags === 'string' ? p.tags : ''), 
+      is_published: !!p.is_published 
+    })
     setThumbnail(null)
     setShowModal(true)
   }
@@ -115,13 +130,13 @@ export default function AdminBlog() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] flex flex-col my-auto">
             <div className="p-5 border-b border-slate-700 flex items-center justify-between">
               <h3 className="text-white font-semibold">{editing ? 'Edit Post' : 'New Post'}</h3>
               <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white text-2xl">×</button>
             </div>
-            <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4">
+            <form onSubmit={handleSubmit} className="p-5 overflow-y-auto flex-1 min-h-0 space-y-4 overscroll-contain">
               <div>
                 <label className="label">Title *</label>
                 <input className="input" value={form.title} onChange={set('title')} required />
@@ -141,7 +156,11 @@ export default function AdminBlog() {
                 </div>
                 <div>
                   <label className="label">Thumbnail</label>
+                  {editing && form.thumbnail && !thumbnail && (
+                    <img src={`${import.meta.env.VITE_API_URL}${form.thumbnail}`} alt="Current thumbnail" className="w-24 h-16 object-cover rounded-md border border-slate-700 mb-2" />
+                  )}
                   <input type="file" accept="image/*" onChange={e => setThumbnail(e.target.files[0])} className="input py-2 text-sm" />
+                  {thumbnail && <p className="text-slate-500 text-xs mt-1">New image selected (will replace existing)</p>}
                 </div>
               </div>
               <div className="flex items-center gap-3">

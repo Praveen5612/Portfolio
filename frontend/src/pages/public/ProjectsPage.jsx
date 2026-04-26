@@ -19,7 +19,7 @@ export default function ProjectsPage() {
   useEffect(() => {
     projectsApi.getAll()
       .then(r => setProjects(r.data || []))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false))
   }, [])
 
@@ -53,11 +53,10 @@ export default function ProjectsPage() {
                   whileTap={{ scale: 0.95 }}
                   key={tag}
                   onClick={() => setFilter(tag)}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-md ${
-                    filter === tag
+                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-md ${filter === tag
                       ? 'bg-blue-600/90 text-white shadow-blue-500/30 border border-blue-500/50'
                       : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700 hover:bg-slate-800'
-                  }`}
+                    }`}
                 >
                   {tag}
                 </motion.button>
@@ -89,7 +88,7 @@ export default function ProjectsPage() {
                     key={project.id}
                   >
                     <TiltCard>
-                      <div 
+                      <div
                         onClick={() => {
                           trackProjectClick(project.id, 'view')
                           setSelectedProject(project)
@@ -135,11 +134,11 @@ export default function ProjectsPage() {
                               </span>
                             ))}
                           </div>
-                          
+
                           <div className="flex gap-4 pt-4 border-t border-slate-800/80">
-                            {project.live_url && (
+                            {project.url && (
                               <a
-                                href={project.live_url}
+                                href={project.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => { e.stopPropagation(); trackProjectClick(project.id, 'live') }}
@@ -197,7 +196,7 @@ export default function ProjectsPage() {
               onClick={e => e.stopPropagation()}
             >
               {/* Close button */}
-              <button 
+              <button
                 onClick={() => setSelectedProject(null)}
                 className="absolute top-4 right-4 z-50 w-10 h-10 bg-slate-950/50 backdrop-blur-md hover:bg-red-500/20 text-slate-300 hover:text-red-400 rounded-full flex items-center justify-center transition-all border border-white/10"
               >
@@ -239,9 +238,9 @@ export default function ProjectsPage() {
                   </div>
 
                   <div className="flex flex-wrap gap-4 mt-auto pt-6 border-t border-slate-800">
-                    {selectedProject.live_url && (
+                    {selectedProject.url && (
                       <a
-                        href={selectedProject.live_url}
+                        href={selectedProject.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex-1 min-w-[140px] px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)]"

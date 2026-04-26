@@ -3,12 +3,20 @@ import pool from '../../config/db.js';
 class ExperienceModel {
   async getPublicExperience() {
     const [rows] = await pool.execute('SELECT * FROM work_experience WHERE is_published=1 ORDER BY sort_order ASC, start_date DESC');
-    return rows;
+    return rows.map(r => ({
+      ...r,
+      achievements: typeof r.achievements === 'string' ? JSON.parse(r.achievements) : r.achievements,
+      tech_stack: typeof r.tech_stack === 'string' ? JSON.parse(r.tech_stack) : r.tech_stack
+    }));
   }
 
   async getAllAdminExperience() {
     const [rows] = await pool.execute('SELECT * FROM work_experience ORDER BY sort_order ASC, start_date DESC');
-    return rows;
+    return rows.map(r => ({
+      ...r,
+      achievements: typeof r.achievements === 'string' ? JSON.parse(r.achievements) : r.achievements,
+      tech_stack: typeof r.tech_stack === 'string' ? JSON.parse(r.tech_stack) : r.tech_stack
+    }));
   }
 
   async createExperience(data) {

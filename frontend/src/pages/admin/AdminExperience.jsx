@@ -13,8 +13,19 @@ export default function AdminExperience() {
   const [form, setForm] = useState(EMPTY)
   const [loading, setLoading] = useState(false)
 
-  const load = () => experienceApi.getAll({ admin: true }).then(r => setItems(r.data || [])).catch(() => {})
+  const load = () => experienceApi.getAll({ admin: true }).then(r => setItems(r.data || [])).catch(() => { })
   useEffect(() => { load() }, [])
+  useEffect(() => {
+    if (!showModal) return
+    const prevBody = document.body.style.overflow
+    const prevHtml = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prevBody
+      document.documentElement.style.overflow = prevHtml
+    }
+  }, [showModal])
 
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
 
@@ -96,13 +107,13 @@ export default function AdminExperience() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-h-[calc(100dvh-2rem)] sm:max-h-[90vh] flex flex-col my-auto">
             <div className="p-5 border-b border-slate-700 flex items-center justify-between">
               <h3 className="text-white font-semibold">{editing ? 'Edit Experience' : 'Add Experience'}</h3>
               <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white text-2xl">×</button>
             </div>
-            <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4">
+            <form onSubmit={handleSubmit} className="p-5 overflow-y-auto flex-1 min-h-0 space-y-4 overscroll-contain">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="label">Company *</label>

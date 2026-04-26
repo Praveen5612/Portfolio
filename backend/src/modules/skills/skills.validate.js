@@ -7,5 +7,5 @@ export const skillSchema = joi.object({
   icon: joi.string().allow('', null),
   sort_order: joi.number().default(0),
   status: joi.string().valid('active', 'inactive').default('active'),
-  is_published: joi.boolean().default(true),
+  is_active: joi.boolean().truthy('1', 1).falsy('0', 0).default(true),
 });

@@ -14,7 +14,7 @@ export default function AdminProjects() {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const load = () => projectsApi.getAll({ admin: true }).then(r => setProjects(r.data || [])).catch(() => {})
+  const load = () => projectsApi.getAll({ admin: true }).then(r => setProjects(r.data || [])).catch(() => { })
 
   useEffect(() => { load() }, [])
 
@@ -23,7 +23,15 @@ export default function AdminProjects() {
   const openAdd = () => { setEditing(null); setForm(EMPTY); setImages([]); setShowModal(true) }
   const openEdit = (p) => {
     setEditing(p)
-    setForm({ ...p, tech_stack: Array.isArray(p.tech_stack) ? p.tech_stack.join(', ') : p.tech_stack || '', is_featured: !!p.is_featured, is_published: !!p.is_published })
+    setForm({
+      ...EMPTY,
+      ...p,
+      live_url: p.url || '',
+      status: p.is_published ? 'published' : 'draft',
+      tech_stack: Array.isArray(p.tech_stack) ? p.tech_stack.join(', ') : p.tech_stack || '',
+      is_featured: !!p.featured,
+      is_published: !!p.is_published
+    })
     setImages([])
     setShowModal(true)
   }
@@ -34,6 +42,7 @@ export default function AdminProjects() {
     try {
       const fd = new FormData()
       Object.entries(form).forEach(([k, v]) => {
+        if (k === 'images') return; // Do not send existing DB images as text fields
         if (k === 'tech_stack') fd.append(k, JSON.stringify(v.split(',').map(s => s.trim()).filter(Boolean)))
         else if (k === 'is_featured' || k === 'is_published') fd.append(k, v ? 1 : 0)
         else fd.append(k, v || '')
@@ -67,7 +76,7 @@ export default function AdminProjects() {
 
   const togglePublish = async (p) => {
     try {
-      await projectsApi.update(p.id, { is_published: p.is_published ? 0 : 1 })
+      await projectsApi.updateStatus(p.id, p.is_published ? 0 : 1)
       toast.success(p.is_published ? 'Unpublished' : 'Published')
       load()
     } catch { /* Handled */ }
@@ -106,7 +115,17 @@ export default function AdminProjects() {
                     )}
                     <div>
                       <p className="text-white font-medium">{p.title}</p>
-                      <p className="text-slate-500 text-xs line-clamp-1 max-w-xs">{p.description}</p>
+                      <div className="flex items-center gap-3 mt-1">
+                        <p className="text-slate-500 text-xs line-clamp-1 max-w-[200px]">{p.description}</p>
+                        <div className="flex items-center gap-2 border-l border-slate-700 pl-2">
+                          {p.url && (
+                            <a href={p.url} target="_blank" rel="noreferrer" className="text-emerald-400 hover:text-emerald-300 text-[10px] font-mono uppercase">Live</a>
+                          )}
+                          {p.github_url && (
+                            <a href={p.github_url} target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300 text-[10px] font-mono uppercase">GitHub</a>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -200,8 +219,15 @@ export default function AdminProjects() {
                 </div>
                 <div className="sm:col-span-2">
                   <label className="label">Images</label>
+                  {form.images && form.images.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {form.images.map((img, i) => (
+                        <img key={i} src={`${import.meta.env.VITE_API_URL}${img}`} alt={`Project image ${i + 1}`} className="w-16 h-16 object-cover rounded-md border border-slate-700" />
+                      ))}
+                    </div>
+                  )}
                   <input type="file" multiple accept="image/*" onChange={e => setImages(Array.from(e.target.files))} className="input py-2" />
-                  {images.length > 0 && <p className="text-slate-500 text-xs mt-1">{images.length} file(s) selected</p>}
+                  {images.length > 0 && <p className="text-slate-500 text-xs mt-1">{images.length} new file(s) selected (will replace existing)</p>}
                 </div>
                 <div>
                   <label className="label">Meta Title</label>

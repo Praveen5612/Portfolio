@@ -2,7 +2,7 @@ import api from './api.js';
 import { buildPaginationQuery } from '../utils/pagination.js';
 
 export const resumeApi = {
-  getAll: (params) => api.get(`/resume${buildPaginationQuery(params)}`),
+  getAll: (params) => api.get(`/resume/admin/all${buildPaginationQuery(params)}`),
   getById: (id) => api.get(`/resume/${id}`),
   getActive: () => api.get('/resume/active'),
   download: (id, params) => api.get(`/resume/download/${id}`, { params }),

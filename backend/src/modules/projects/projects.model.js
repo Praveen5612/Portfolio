@@ -52,18 +52,18 @@ class ProjectsModel {
 
   async createProject(data) {
     const [result] = await pool.execute(
-      `INSERT INTO projects (title, slug, description, thumbnail, images, github_url, url, tech_stack, featured, sort_order, meta_title, meta_description, is_published)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-       [data.title, data.slug, data.description, data.thumbnail, JSON.stringify(data.images || []), data.github_url, data.url, JSON.stringify(data.tech_stack || []), data.featured, data.sort_order, data.meta_title, data.meta_description, data.is_published]
+      `INSERT INTO projects (title, slug, description, long_description, thumbnail, images, github_url, url, tech_stack, featured, sort_order, meta_title, meta_description, is_published)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+       [data.title, data.slug, data.description, data.long_description, data.thumbnail, JSON.stringify(data.images || []), data.github_url, data.url, JSON.stringify(data.tech_stack || []), data.featured, data.sort_order, data.meta_title, data.meta_description, data.is_published]
     );
     return result.insertId;
   }
 
   async updateProject(id, data) {
     await pool.execute(
-      `UPDATE projects SET title=?, slug=?, description=?, thumbnail=?, images=?, github_url=?, url=?, tech_stack=?,
+      `UPDATE projects SET title=?, slug=?, description=?, long_description=?, thumbnail=?, images=?, github_url=?, url=?, tech_stack=?,
        featured=?, sort_order=?, is_published=?, meta_title=?, meta_description=?, updated_at=NOW() WHERE id=?`,
-      [data.title, data.slug, data.description, data.thumbnail, JSON.stringify(data.images || []), data.github_url, data.url, JSON.stringify(data.tech_stack || []), data.featured, data.sort_order, data.is_published, data.meta_title, data.meta_description, id]
+      [data.title, data.slug, data.description, data.long_description, data.thumbnail, JSON.stringify(data.images || []), data.github_url, data.url, JSON.stringify(data.tech_stack || []), data.featured, data.sort_order, data.is_published, data.meta_title, data.meta_description, id]
     );
   }
 

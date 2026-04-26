@@ -22,7 +22,7 @@ class VisitorsModel {
        ${where}
        GROUP BY v.id
        ORDER BY v.last_visit DESC LIMIT ? OFFSET ?`,
-      [...params, Number(limit), Number(offset)]
+      [...params, String(limit), String(offset)]
     );
     
     const [count] = await pool.execute(`SELECT COUNT(*) as total FROM visitors ${where}`, params);

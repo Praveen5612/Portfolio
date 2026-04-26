@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
 import { SettingsProvider } from './context/SettingsContext.jsx'
@@ -43,18 +43,20 @@ function ProtectedRoute({ children }) {
 }
 
 function AppContent() {
+  const location = useLocation()
+
   useEffect(() => {
     initTracker()
     window.addEventListener('beforeunload', endSession)
-    
-    // Initialize Locomotive Scroll for smooth scrolling
-    const locomotiveScroll = new LocomotiveScroll();
-    
+
+    const isAdminRoute = location.pathname.startsWith('/admin')
+    const locomotiveScroll = isAdminRoute ? null : new LocomotiveScroll()
+
     return () => {
       window.removeEventListener('beforeunload', endSession)
-      if (locomotiveScroll) locomotiveScroll.destroy();
+      if (locomotiveScroll) locomotiveScroll.destroy()
     }
-  }, [])
+  }, [location.pathname])
 
   return (
     <Routes>

@@ -4,6 +4,19 @@ import { settingsApi } from '../../services/settings.api.js'
 
 const TAB_GROUPS = ['general', 'home', 'about', 'contact', 'seo', 'email', 'leads', 'analytics']
 
+// Defined OUTSIDE the parent component so React doesn't treat it as a new
+// component type on every render (which would cause inputs to lose focus)
+const F = ({ label, k, type = 'text', placeholder = '', settings, onChange }) => (
+  <div>
+    <label className="label">{label}</label>
+    {type === 'textarea' ? (
+      <textarea className="input resize-none" rows={4} value={settings[k] || ''} onChange={onChange(k)} placeholder={placeholder} />
+    ) : (
+      <input className="input" type={type} value={settings[k] || ''} onChange={onChange(k)} placeholder={placeholder} />
+    )}
+  </div>
+)
+
 export default function AdminSettings() {
   const [settings, setSettings] = useState({})
   const [socialLinks, setSocialLinks] = useState([])
@@ -45,17 +58,6 @@ export default function AdminSettings() {
   const removeSocialLink = (i) => setSocialLinks(l => l.filter((_, idx) => idx !== i))
   const setSocial = (i, k) => (e) => setSocialLinks(l => l.map((item, idx) => idx === i ? { ...item, [k]: e.target.value } : item))
 
-  const F = ({ label, k, type = 'text', placeholder = '' }) => (
-    <div>
-      <label className="label">{label}</label>
-      {type === 'textarea' ? (
-        <textarea className="input resize-none" rows={4} value={settings[k] || ''} onChange={setVal(k)} placeholder={placeholder} />
-      ) : (
-        <input className="input" type={type} value={settings[k] || ''} onChange={setVal(k)} placeholder={placeholder} />
-      )}
-    </div>
-  )
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -94,19 +96,19 @@ export default function AdminSettings() {
       <div className="card p-6">
         {activeTab === 'general' && (
           <div className="grid sm:grid-cols-2 gap-5">
-            <F label="Site Name" k="site_name" placeholder="My Portfolio" />
-            <F label="Tagline" k="site_tagline" placeholder="Full Stack Developer" />
+            <F label="Site Name" k="site_name" placeholder="My Portfolio" settings={settings} onChange={setVal} />
+            <F label="Tagline" k="site_tagline" placeholder="Full Stack Developer" settings={settings} onChange={setVal} />
             <div className="sm:col-span-2">
-              <F label="Resume URL" k="resume_url" placeholder="/resume" />
+              <F label="Resume URL" k="resume_url" placeholder="/resume" settings={settings} onChange={setVal} />
             </div>
           </div>
         )}
 
         {activeTab === 'home' && (
           <div className="space-y-5">
-            <F label="Hero Title (HTML allowed)" k="hero_title" placeholder="Hi, I'm <span>Your Name</span>" />
-            <F label="Hero Subtitle" k="hero_subtitle" placeholder="Full Stack Developer & UI/UX Enthusiast" />
-            <F label="Hero Description" k="hero_description" type="textarea" />
+            <F label="Hero Title (HTML allowed)" k="hero_title" placeholder="Hi, I'm <span>Your Name</span>" settings={settings} onChange={setVal} />
+            <F label="Hero Subtitle" k="hero_subtitle" placeholder="Full Stack Developer & UI/UX Enthusiast" settings={settings} onChange={setVal} />
+            <F label="Hero Description" k="hero_description" type="textarea" settings={settings} onChange={setVal} />
           </div>
         )}
 
@@ -127,20 +129,20 @@ export default function AdminSettings() {
 
         {activeTab === 'contact' && (
           <div className="grid sm:grid-cols-2 gap-5">
-            <F label="Contact Email" k="contact_email" type="email" />
-            <F label="Contact Phone" k="contact_phone" placeholder="+1 234 567 8900" />
+            <F label="Contact Email" k="contact_email" type="email" settings={settings} onChange={setVal} />
+            <F label="Contact Phone" k="contact_phone" placeholder="+1 234 567 8900" settings={settings} onChange={setVal} />
             <div className="sm:col-span-2">
-              <F label="Location" k="contact_location" placeholder="Your City, Country" />
+              <F label="Location" k="contact_location" placeholder="Your City, Country" settings={settings} onChange={setVal} />
             </div>
           </div>
         )}
 
         {activeTab === 'seo' && (
           <div className="space-y-5">
-            <F label="Meta Title" k="meta_title" />
-            <F label="Meta Description" k="meta_description" type="textarea" />
-            <F label="Meta Keywords" k="meta_keywords" placeholder="developer, portfolio, react, nodejs" />
-            <F label="OG Image URL" k="og_image" placeholder="https://yoursite.com/og.jpg" />
+            <F label="Meta Title" k="meta_title" settings={settings} onChange={setVal} />
+            <F label="Meta Description" k="meta_description" type="textarea" settings={settings} onChange={setVal} />
+            <F label="Meta Keywords" k="meta_keywords" placeholder="developer, portfolio, react, nodejs" settings={settings} onChange={setVal} />
+            <F label="OG Image URL" k="og_image" placeholder="https://yoursite.com/og.jpg" settings={settings} onChange={setVal} />
           </div>
         )}
 
@@ -168,7 +170,7 @@ export default function AdminSettings() {
 
         {activeTab === 'analytics' && (
           <div className="space-y-5">
-            <F label="Google Analytics ID" k="google_analytics_id" placeholder="G-XXXXXXXXXX" />
+            <F label="Google Analytics ID" k="google_analytics_id" placeholder="G-XXXXXXXXXX" settings={settings} onChange={setVal} />
           </div>
         )}
 
